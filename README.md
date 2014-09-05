@@ -4,6 +4,7 @@ Avenue Code Test
 Teste de Android para a Empresa Avenue Code
 
 **Descrição:**
+
 Aplicação para exibição de localizações.
 Desenvolvida utilizando o Android Studio 0.8.6 com gradle.
 

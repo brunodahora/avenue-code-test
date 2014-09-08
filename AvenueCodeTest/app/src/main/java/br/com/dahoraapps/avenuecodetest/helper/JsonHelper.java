@@ -1,58 +1,21 @@
 package br.com.dahoraapps.avenuecodetest.helper;
 
-import android.app.Activity;
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentActivity;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.support.v7.app.ActionBarActivity;
 
 public class JsonHelper extends AsyncTask<JsonMethod, Void, Object> {
 
     private JsonMethod method;
     private Context context;
+    private ActionBarActivity activity;
     private AsyncTaskCompleteListener callback;
-    private Activity activity;
 
     // Thread methods
     public JsonHelper(Context context, AsyncTaskCompleteListener callback) {
-        this.activity = (Activity) context;
+        this.activity = (ActionBarActivity) context;
         this.context = context;
         this.callback = callback;
-    }
-
-    public JsonHelper(Context context, AsyncTaskCompleteListener callback, FragmentActivity activity) {
-        this(context, callback);
-        this.activity = activity;
-    }
-
-    // Help Methods
-    public static boolean isNetworkAvailable(ConnectivityManager connectivityManager) {
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null;
-    }
-
-    public static List<JSONObject> getListOfJSONArray(JSONArray values) {
-        List<JSONObject> list = new ArrayList<JSONObject>();
-        if (values == null) {
-            return list;
-        } else {
-            try {
-                for (int i = 0; i < values.length(); i++) {
-                    list.add(values.getJSONObject(i));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return list;
-        }
     }
 
     @Override
@@ -70,16 +33,17 @@ public class JsonHelper extends AsyncTask<JsonMethod, Void, Object> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        activity.setProgressBarIndeterminate(true);
-        activity.setProgressBarIndeterminateVisibility(true);
+        // Start Progress Bar Indeterminate
+        this.activity.setSupportProgressBarIndeterminateVisibility(true);
     }
 
     @Override
     protected void onPostExecute(Object result) {
         super.onPostExecute(result);
-        activity.setProgressBarIndeterminate(false);
-        activity.setProgressBarIndeterminateVisibility(false);
-        if (!activity.isFinishing()) this.callback.onTaskComplete(result, method);
+        // Calls activity callback
+        this.callback.onTaskComplete(result, method);
+        // Stop Progress Bar Indeterminate
+        this.activity.setSupportProgressBarIndeterminateVisibility(false);
     }
 
 }

@@ -10,13 +10,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 public enum JsonMethod {
     GET_PLACES {
         @Override
         public Object execute() throws Exception {
             String address = bundle.getString("address");
-            return executeGet(MAPS_API_URL + "json?address=" + address.trim() + "&sensor=false");
+            // Encoding for URL
+            address = URLEncoder.encode(address.trim(), "UTF-8");
+            return executeGet(MAPS_API_URL + "json?address=" + address + "&sensor=false");
         }
     };
 
@@ -25,6 +28,7 @@ public enum JsonMethod {
     private static Bundle bundle;
     private static Context context;
 
+    // Convert stream to String
     private static String readStream(InputStream in) {
         String stream = new String();
         BufferedReader reader = null;
@@ -50,7 +54,7 @@ public enum JsonMethod {
         return stream;
     }
 
-    // GET Methods
+    // GET Method
     private static String executeGet(String url) throws Exception {
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         try {

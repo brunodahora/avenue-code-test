@@ -1,4 +1,4 @@
-package br.com.dahoraapps.avenuecodetest.activities;
+package br.com.dahoraapps.avenuecodetest.activity;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -26,7 +26,7 @@ import br.com.dahoraapps.avenuecodetest.adapter.PlacesAdapter;
 import br.com.dahoraapps.avenuecodetest.data.MapsResponse;
 import br.com.dahoraapps.avenuecodetest.data.Place;
 import br.com.dahoraapps.avenuecodetest.helper.AsyncTaskCompleteListener;
-import br.com.dahoraapps.avenuecodetest.helper.JsonExecutor;
+import br.com.dahoraapps.avenuecodetest.helper.JsonHelper;
 import br.com.dahoraapps.avenuecodetest.helper.JsonMethod;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -45,12 +45,14 @@ public class MainActivity extends ActionBarActivity implements AsyncTaskComplete
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Request Progress Bar
         supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
 
         activity = this;
 
+        //Check if already searched
         if (savedInstanceState != null && savedInstanceState.containsKey("maps_response")) {
             response = (MapsResponse) savedInstanceState.get("maps_response");
             adapter = new PlacesAdapter(this, response.getResults());
@@ -62,6 +64,7 @@ public class MainActivity extends ActionBarActivity implements AsyncTaskComplete
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Reload activity with search results
                 Intent intent = new Intent(activity, MapsActivity.class);
                 intent.putExtra("maps_response", response);
                 intent.putExtra("place", (Place) listView.getItemAtPosition(position));
@@ -85,7 +88,8 @@ public class MainActivity extends ActionBarActivity implements AsyncTaskComplete
 
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            JsonExecutor jsonHelper = new JsonExecutor(this, this);
+            // Call search on Maps API on search action
+            JsonHelper jsonHelper = new JsonHelper(this, this);
             JsonMethod jsonMethod = JsonMethod.GET_PLACES;
             Bundle bundle = new Bundle();
             bundle.putString("address", intent.getStringExtra(SearchManager.QUERY));
@@ -99,6 +103,7 @@ public class MainActivity extends ActionBarActivity implements AsyncTaskComplete
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
 
+        // If version 3+ show search on actionbar
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             SearchManager searchManager =
                     (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -116,7 +121,10 @@ public class MainActivity extends ActionBarActivity implements AsyncTaskComplete
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.search:
-                onSearchRequested();
+                // If version 2 show search view
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+                    onSearchRequested();
+                }
                 return true;
             default:
                 return false;
@@ -127,9 +135,9 @@ public class MainActivity extends ActionBarActivity implements AsyncTaskComplete
     public void onTaskComplete(Object result, JsonMethod method) {
         if (method.equals(JsonMethod.GET_PLACES)) {
             response = new Gson().fromJson((String) result, MapsResponse.class);
+            adapter.clear();
             if (response != null) {
                 List<Place> places = response.getResults();
-                adapter.clear();
                 if (places != null) {
                     for (Place place : places) {
                         adapter.add(place);
@@ -140,8 +148,4 @@ public class MainActivity extends ActionBarActivity implements AsyncTaskComplete
         }
     }
 
-    @Override
-    public void reload() {
-
-    }
 }

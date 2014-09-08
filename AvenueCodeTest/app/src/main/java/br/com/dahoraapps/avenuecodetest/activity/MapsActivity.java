@@ -1,7 +1,9 @@
-package br.com.dahoraapps.avenuecodetest.activities;
+package br.com.dahoraapps.avenuecodetest.activity;
 
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
+import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,13 +21,16 @@ public class MapsActivity extends ActionBarActivity {
 
     private Place place;
     private MapsResponse response;
-    private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    // Might be null if Google Play services APK is not available.
+    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        //Enable up navigation
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // Load places
         if (getIntent().hasExtra("place")) {
             place = (Place) getIntent().getSerializableExtra("place");
         }
@@ -36,12 +41,24 @@ public class MapsActivity extends ActionBarActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // Up navigation
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
     }
 
     /**
+     * FROM Default MapsActivity Template
      * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
      * installed) and the map has not already been instantiated.. This will ensure that we only ever
      * call {@link #setUpMap()} once when {@link #mMap} is not null.
@@ -70,6 +87,7 @@ public class MapsActivity extends ActionBarActivity {
     }
 
     /**
+     * FROM Default MapsActivity Template
      * This is where we can add markers or lines, add listeners or move the camera. In this case, we
      * just add a marker near Africa.
      * <p/>
@@ -77,9 +95,11 @@ public class MapsActivity extends ActionBarActivity {
      */
     private void setUpMap() {
         if (place != null && response != null) {
+            // Add a marker for each place
             for (Place p : response.getResults()) {
                 Position pos = p.getGeometry().getLocation();
-                mMap.addMarker(new MarkerOptions().position(new LatLng(pos.getLat(), pos.getLng())).title(p.getFormattedAddress()));
+                mMap.addMarker(new MarkerOptions().position(new LatLng(pos.getLat(), pos.getLng()))
+                        .title(p.getFormattedAddress()).snippet("Lat: " + pos.getLat() + " / Lng: " + pos.getLng()));
             }
         }
 
@@ -88,8 +108,6 @@ public class MapsActivity extends ActionBarActivity {
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(new LatLng(pos.getLat(), pos.getLng()))         // Sets the center of the map to Mountain View
                 .zoom(10)                                               // Sets the zoom
-//                .bearing(90)                                            // Sets the orientation of the camera to east
-//                .tilt(30)                                               // Sets the tilt of the camera to 30 degrees
                 .build();                                               // Creates a CameraPosition from the builder
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }

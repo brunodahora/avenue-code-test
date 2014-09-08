@@ -116,7 +116,9 @@ public class MainActivity extends ActionBarActivity implements AsyncTaskComplete
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.search:
-                onSearchRequested();
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+                    onSearchRequested();
+                }
                 return true;
             default:
                 return false;

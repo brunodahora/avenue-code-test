@@ -13,6 +13,7 @@ public class Place implements Serializable {
     private List<AddressComponent> addressComponents;
     @SerializedName("formatted_address")
     private String formattedAddress;
+    private Geometry geometry;
     private List<String> types;
 
     public List<AddressComponent> getAddressComponents() {
@@ -29,6 +30,14 @@ public class Place implements Serializable {
 
     public void setFormattedAddress(String formattedAddress) {
         this.formattedAddress = formattedAddress;
+    }
+
+    public Geometry getGeometry() {
+        return geometry;
+    }
+
+    public void setGeometry(Geometry geometry) {
+        this.geometry = geometry;
     }
 
     public List<String> getTypes() {

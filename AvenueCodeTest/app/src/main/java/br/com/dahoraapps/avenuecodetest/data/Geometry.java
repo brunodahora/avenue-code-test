@@ -1,5 +1,7 @@
 package br.com.dahoraapps.avenuecodetest.data;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -10,6 +12,8 @@ public class Geometry implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Cardinal bounds;
+    private Position location;
+    @SerializedName("location_type")
     private String locationType;
     private Cardinal viewport;
 
@@ -19,6 +23,14 @@ public class Geometry implements Serializable {
 
     public void setBounds(Cardinal bounds) {
         this.bounds = bounds;
+    }
+
+    public Position getLocation() {
+        return location;
+    }
+
+    public void setLocation(Position location) {
+        this.location = location;
     }
 
     public String getLocationType() {

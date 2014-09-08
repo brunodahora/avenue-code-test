@@ -1,11 +1,14 @@
 package br.com.dahoraapps.avenuecodetest.data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by brunodahora on 05/09/14.
  */
-public class MapsResponse {
+public class MapsResponse implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private List<Place> results;
     private String status;

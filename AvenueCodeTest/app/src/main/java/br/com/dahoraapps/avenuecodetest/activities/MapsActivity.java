@@ -1,23 +1,37 @@
 package br.com.dahoraapps.avenuecodetest.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import br.com.dahoraapps.avenuecodetest.R;
+import br.com.dahoraapps.avenuecodetest.data.MapsResponse;
+import br.com.dahoraapps.avenuecodetest.data.Place;
+import br.com.dahoraapps.avenuecodetest.data.Position;
 
-public class MapsActivity extends FragmentActivity {
+public class MapsActivity extends ActionBarActivity {
 
+    private Place place;
+    private MapsResponse response;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getIntent().hasExtra("place")) {
+            place = (Place) getIntent().getSerializableExtra("place");
+        }
+        if (getIntent().hasExtra("maps_response")) {
+            response = (MapsResponse) getIntent().getSerializableExtra("maps_response");
+        }
         setUpMapIfNeeded();
     }
 
@@ -62,6 +76,21 @@ public class MapsActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        if (place != null && response != null) {
+            for (Place p : response.getResults()) {
+                Position pos = p.getGeometry().getLocation();
+                mMap.addMarker(new MarkerOptions().position(new LatLng(pos.getLat(), pos.getLng())).title(p.getFormattedAddress()));
+            }
+        }
+
+        //Center the camera on selected location and zoom
+        Position pos = place.getGeometry().getLocation();
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(pos.getLat(), pos.getLng()))         // Sets the center of the map to Mountain View
+                .zoom(10)                                               // Sets the zoom
+//                .bearing(90)                                            // Sets the orientation of the camera to east
+//                .tilt(30)                                               // Sets the tilt of the camera to 30 degrees
+                .build();                                               // Creates a CameraPosition from the builder
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 }

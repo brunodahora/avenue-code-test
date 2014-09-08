@@ -34,28 +34,47 @@ import butterknife.InjectView;
 
 public class MainActivity extends ActionBarActivity implements AsyncTaskCompleteListener {
 
-    PlacesAdapter adapter;
     @InjectView(R.id.list)
     ListView listView;
     @InjectView(R.id.empty)
     TextView emptyView;
+    private ActionBarActivity activity;
+    private PlacesAdapter adapter;
+    private MapsResponse response;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
 
-        adapter = new PlacesAdapter(this, new ArrayList<Place>());
+        activity = this;
+
+        if (savedInstanceState != null && savedInstanceState.containsKey("maps_response")) {
+            response = (MapsResponse) savedInstanceState.get("maps_response");
+            adapter = new PlacesAdapter(this, response.getResults());
+        } else {
+            adapter = new PlacesAdapter(this, new ArrayList<Place>());
+        }
         listView.setAdapter(adapter);
         listView.setEmptyView(emptyView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                Intent intent = new Intent(activity, MapsActivity.class);
+                intent.putExtra("maps_response", response);
+                intent.putExtra("place", (Place) listView.getItemAtPosition(position));
+                startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (response != null)
+            outState.putSerializable("maps_response", response);
     }
 
     @Override
@@ -107,7 +126,7 @@ public class MainActivity extends ActionBarActivity implements AsyncTaskComplete
     @Override
     public void onTaskComplete(Object result, JsonMethod method) {
         if (method.equals(JsonMethod.GET_PLACES)) {
-            MapsResponse response = new Gson().fromJson((String) result, MapsResponse.class);
+            response = new Gson().fromJson((String) result, MapsResponse.class);
             if (response != null) {
                 List<Place> places = response.getResults();
                 adapter.clear();

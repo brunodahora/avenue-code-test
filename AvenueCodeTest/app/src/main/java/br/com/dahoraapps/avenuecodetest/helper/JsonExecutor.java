@@ -75,7 +75,6 @@ public class JsonExecutor extends AsyncTask<JsonMethod, Void, Object> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        this.activity.setSupportProgressBarIndeterminate(true);
         this.activity.setSupportProgressBarIndeterminateVisibility(true);
     }
 
@@ -83,7 +82,6 @@ public class JsonExecutor extends AsyncTask<JsonMethod, Void, Object> {
     protected void onPostExecute(Object result) {
         super.onPostExecute(result);
         this.callback.onTaskComplete(result, method);
-        this.activity.setSupportProgressBarIndeterminate(false);
         this.activity.setSupportProgressBarIndeterminateVisibility(false);
     }
 

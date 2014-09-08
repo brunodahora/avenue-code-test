@@ -16,7 +16,7 @@ public enum JsonMethod {
         @Override
         public Object execute() throws Exception {
             String address = bundle.getString("address");
-            return executeGet(MAPS_API_URL + "json?address=" + address + "&sensor=false");
+            return executeGet(MAPS_API_URL + "json?address=" + address.trim() + "&sensor=false");
         }
     };
 

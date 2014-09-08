@@ -5,9 +5,11 @@ import android.widget.ArrayAdapter;
 
 import java.util.List;
 
-public class PlacesAdapter extends ArrayAdapter<String> {
+import br.com.dahoraapps.avenuecodetest.data.Place;
 
-    public PlacesAdapter(Context context, int resource, List<String> objects) {
+public class PlacesAdapter extends ArrayAdapter<Place> {
+
+    public PlacesAdapter(Context context, int resource, List<Place> objects) {
         super(context, resource, objects);
     }
 

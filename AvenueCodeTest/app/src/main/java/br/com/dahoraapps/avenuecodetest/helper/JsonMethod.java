@@ -54,8 +54,6 @@ public enum JsonMethod {
     private static String executeGet(String url) throws Exception {
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         try {
-            //			connection.setRequestProperty("API_KEY", EuCozinhandoConstants.API_KEY);
-            //			connection.setRequestProperty("version", EuCozinhandoConstants.APP_VERSION);
             connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
             connection.setConnectTimeout(60000);
             connection.setReadTimeout(60000);

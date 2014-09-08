@@ -1,13 +1,17 @@
 package br.com.dahoraapps.avenuecodetest.data;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by brunodahora on 05/09/14.
- */
-public class AddressComponent {
+public class AddressComponent implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
+    @SerializedName("long_name")
     private String longName;
+    @SerializedName("short_name")
     private String shortName;
     private List<String> types;
 

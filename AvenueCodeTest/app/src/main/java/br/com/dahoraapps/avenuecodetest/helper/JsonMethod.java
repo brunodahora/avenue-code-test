@@ -16,11 +16,11 @@ public enum JsonMethod {
         @Override
         public Object execute() throws Exception {
             String address = bundle.getString("address");
-            return executeGet(MAPS_API_URL + "/json?address=" + address + "&sensor=false");
+            return executeGet(MAPS_API_URL + "json?address=" + address + "&sensor=false");
         }
     };
 
-    public static String MAPS_API_URL = "http://http://maps.googleapis.com/maps/api/geocode/";
+    public static String MAPS_API_URL = "http://maps.googleapis.com/maps/api/geocode/";
 
     private static Bundle bundle;
     private static Context context;

@@ -7,15 +7,15 @@ import java.util.List;
  */
 public class MapsResponse {
 
-    private List<Place> result;
+    private List<Place> results;
     private String status;
 
-    public List<Place> getResult() {
-        return result;
+    public List<Place> getResults() {
+        return results;
     }
 
-    public void setResult(List<Place> result) {
-        this.result = result;
+    public void setResults(List<Place> results) {
+        this.results = results;
     }
 
     public String getStatus() {

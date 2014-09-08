@@ -1,9 +1,13 @@
 package br.com.dahoraapps.avenuecodetest.data;
 
+import java.io.Serializable;
+
 /**
  * Created by brunodahora on 05/09/14.
  */
-public class Geometry {
+public class Geometry implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Cardinal bounds;
     private String locationType;

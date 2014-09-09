@@ -10,10 +10,9 @@ Developed using the Android Studio 0.8.6 with gradle.
 
 **Used Libraries:**
 
-- **ActionBar Compat:** Compatibility library from Google to available the use of Holo Theme in Android versions prior to a 3.0
+- **ActionBar Compat:** Compatibility library from Google to available the use of Holo Theme in Android versions prior to 3.0
 - **Gson:** Json manipulation library
 - **ButterKnife:** View Elements injection library
-- **Apache Commons Lang:** Strings manipulation library
 
 **Changes:**
 

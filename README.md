@@ -1,16 +1,23 @@
 Avenue Code Test
 ================
 
-Teste de Android para a Empresa Avenue Code
+Android Test for Avenue Code
 
-**Descrição:**
+**Description:**
 
-Aplicação para exibição de localizações.
-Desenvolvida utilizando o Android Studio 0.8.6 com gradle.
+Application that shows search locations by name.
+Developed using the Android Studio 0.8.6 with gradle.
 
-**Bibliotecas utilizadas:**
+**Used Libraries:**
 
-- **ActionBar Compat:** Biblioteca de compatibilidade do Google para disponibilizar tema Holo em versões do Android menores que a 3.0
-- **Gson:** Biblioteca para manipulação de Json
-- **ButterKnife:** Biblioteca para injeção de elementos de view
-- **Apache Commons Lang:** Biblioteca para manipulação de Strings
+- **ActionBar Compat:** Compatibility library from Google to available the use of Holo Theme in Android versions prior to a 3.0
+- **Gson:** Json manipulation library
+- **ButterKnife:** View Elements injection library
+- **Apache Commons Lang:** Strings manipulation library
+
+**Changes:**
+
+I made two changes on the specification:
+- Increased the minSDK to 9 because of the Google Play Services.
+- Put the search input field on the actionbar.
+

@@ -120,7 +120,7 @@ public class MapsActivity extends ActionBarActivity {
             //Center the camera on selected location and zoom
             cameraPosition = new CameraPosition.Builder()
                     .target(new LatLng(pos.getLat(), pos.getLng()))         // Sets the center of the map to Mountain View
-                    .zoom(10)                                               // Sets the zoom
+                    .zoom(12)                                               // Sets the zoom
                     .build();                                               // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         } else {

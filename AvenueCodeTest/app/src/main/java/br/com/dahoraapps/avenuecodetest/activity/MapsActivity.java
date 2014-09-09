@@ -11,6 +11,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 
 import br.com.dahoraapps.avenuecodetest.R;
 import br.com.dahoraapps.avenuecodetest.data.MapsResponse;
@@ -23,6 +24,7 @@ public class MapsActivity extends ActionBarActivity {
     private MapsResponse response;
     // Might be null if Google Play services APK is not available.
     private GoogleMap mMap;
+    private CameraPosition cameraPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,9 @@ public class MapsActivity extends ActionBarActivity {
         }
         if (getIntent().hasExtra("maps_response")) {
             response = (MapsResponse) getIntent().getSerializableExtra("maps_response");
+        }
+        if (savedInstanceState != null && savedInstanceState.containsKey("camera_position")) {
+            cameraPosition = new Gson().fromJson(savedInstanceState.getString("camera_position"), CameraPosition.class);
         }
         setUpMapIfNeeded();
     }
@@ -55,6 +60,13 @@ public class MapsActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (cameraPosition != null)
+            outState.putString("camera_position", new Gson().toJson(cameraPosition));
     }
 
     /**
@@ -103,12 +115,17 @@ public class MapsActivity extends ActionBarActivity {
             }
         }
 
-        //Center the camera on selected location and zoom
-        Position pos = place.getGeometry().getLocation();
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(pos.getLat(), pos.getLng()))         // Sets the center of the map to Mountain View
-                .zoom(10)                                               // Sets the zoom
-                .build();                                               // Creates a CameraPosition from the builder
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        if (cameraPosition == null) {
+            Position pos = place.getGeometry().getLocation();
+            //Center the camera on selected location and zoom
+            cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(pos.getLat(), pos.getLng()))         // Sets the center of the map to Mountain View
+                    .zoom(10)                                               // Sets the zoom
+                    .build();                                               // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        } else {
+            // If already created with a save state do not animate
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
     }
 }
